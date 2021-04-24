@@ -4,7 +4,10 @@ const {
   GraphQLList
 } = require('graphql');
 const userType = require('./userType');
+const mailType = require('./mailType');
 const User = require('../models/user');
+const Mail = require('../models/mail');
+const { getMail } = require('../services/mail')
 
 // root query type
 const queryType = new GraphQLObjectType({
@@ -23,6 +26,14 @@ const queryType = new GraphQLObjectType({
       },
       resolve(_, { id }) {
         return User.findById(id, (_, user) => user);
+      }
+    },
+    mails: { // query to get emails
+      type: new GraphQLList(mailType),
+      async resolve(_, args, context) {
+        console.log(context);
+        const mail = await Mail.find({});
+        return mail;
       }
     }
   }
